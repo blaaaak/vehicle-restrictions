@@ -68,14 +68,17 @@ lib.callback.register('chroma:server:checkVehicleEntitlement', function(source, 
 
     local modelPerms = modelConfig.requiredPermissions
 
+    if debug then lib.print.info(("Checking %s permissions for source %s"):format(#modelPerms, source)) end
     for i = 1, #modelPerms do
         local permission = modelPerms[i]
+        if debug then lib.print.info(("Checking permission: %s"):format(permission)) end
         if IsPlayerAceAllowed(source --[[@as string]], permission) then
             if debug then lib.print.info(("Player has required permission: %s"):format(permission)) end
             result.allowed = true
             result.message = ""
             return result
         end
+        if debug then lib.print.warn(("Player does not have permission: %s"):format(permission)) end
     end
 
     if debug then lib.print.warn("Player does not have any required permissions") end

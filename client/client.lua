@@ -1,7 +1,6 @@
 local GetVehicleNumberPlateText = GetVehicleNumberPlateText
 local VehToNet                  = VehToNet
 local lib                       = lib
-local cache                     = cache
 
 string                          = lib.string
 local config                    = lib.load('config.config')
@@ -50,12 +49,6 @@ local function restrictVehicle(vehicle, message, shouldDelete)
         position = 'top',
     })
 
-    localCache = {
-        modelHash = GetEntityModel(vehicle),
-        message = message,
-        entitlement = false,
-    }
-
     if shouldDelete then
         DeleteEntity(vehicle)
         ClearPedTasksImmediately(cache.ped)
@@ -63,7 +56,6 @@ local function restrictVehicle(vehicle, message, shouldDelete)
     else
         TaskLeaveVehicle(cache.ped, vehicle, 64)
         if debug then lib.print.info(("TaskLeaveVehicle: %s."):format(tostring(vehicle))) end
-        Wait(1000)
         ClearPedTasks(cache.ped)
     end
 end
@@ -101,7 +93,21 @@ local function handleVehicleCheck(vehicleHandle)
     if not resultData.allowed then
         if debug then lib.print.info("Server denied vehicle access") end
         restrictVehicle(vehicleHandle, resultData.message, resultData.delete)
+        localCache = {
+            modelHash = modelHash,
+            message = resultData.message,
+            entitlement = false,
+        }
+        if debug then print(json.encode(localCache, { indent = true })) end
+        return
     end
+
+    localCache = {
+        modelHash = modelHash,
+        message = "",
+        entitlement = true,
+    }
+    if debug then print(json.encode(localCache, { indent = true })) end
 end
 
 
