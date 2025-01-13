@@ -9,6 +9,16 @@ local NetworkGetFirstEntityOwner = NetworkGetFirstEntityOwner
 local DoesPlayerExist = DoesPlayerExist
 
 
+CreateThread(function()
+    local resourceName = GetCurrentResourceName()
+    lib.print.info("Checking version for resource " .. resourceName)
+    lib.versionCheck('blaaaak/Vehicle-Restrictions')
+
+    print("^2Vehicle Restrictions loaded! ^7🚗")
+    print("^5Check the README for configuration instructions and join our discord for support! ^7📖")
+    print("^6Discord: https://discord.gg/chromalabs ^7💬")
+end)
+
 --- Validates a source to ensure it is a valid number and player is connected.
 ---@param source number Player source
 ---@return boolean
