@@ -1,4 +1,5 @@
 local GetVehicleNumberPlateText = GetVehicleNumberPlateText
+local GetPedInVehicleSeat = GetPedInVehicleSeat
 local VehToNet                  = VehToNet
 local lib                       = lib
 
@@ -71,6 +72,7 @@ end
 ---@param vehicleHandle number The vehicle entity handle
 ---@return nil
 local function handleVehicleCheck(vehicleHandle)
+    
     local modelHash = GetEntityModel(vehicleHandle)
     if debug then lib.print.info(("Checking vehicle model hash: %s"):format(modelHash)) end
 
@@ -133,9 +135,14 @@ lib.onCache('seat', function(value)
 end)
 
 ---@param vehicleHandle number|false
-lib.onCache('vehicle', function(vehicleHandle)
+lib.onCache('vehicle', function(vehicleHandle)        
     if seatCacheFired or not vehicleHandle then
         if debug then lib.print.info("Vehicle cache fired but seatCacheFired or no vehicle handle") end
+        return
+    end
+
+    if GetPedInVehicleSeat(cache.ped, -1) ~= cache.ped then
+        if debug then lib.print.info("User is not currently the driver") end
         return
     end
 
